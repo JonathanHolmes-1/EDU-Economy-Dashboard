@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>EDU Economy Dashboard</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    .grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+    .card { border: 1px solid gray; padding: 10px; }
+  </style>
+</head>
+<body>
+
+<h1>🌍 EDU Economy Dashboard</h1>
+
+<h2>📊 Rankings</h2>
+<div class="grid" id="cards"></div>
+
+<h2>💱 Currency Converter</h2>
+<input type="number" id="amount" value="1">
+
+<select id="from"></select>
+<select id="to"></select>
+
+<h3 id="result"></h3>
+
+<script>
+const countries = [
+  {name:"F-CS",gdp:"Ɇ5.0T",prod:"375K",cur:"Commonwealth Dollar",rate:2.1,rank:"#1"},
+  {name:"USC",gdp:"Ɇ4.5T",prod:"300K",cur:"Communard",rate:2.0,rank:"#2"},
+  {name:"Arcadia",gdp:"Ɇ1.2T",prod:"20K",cur:"ACD",rate:2.7,rank:"#3"},
+  {name:"TDC",gdp:"Ɇ0.9T",prod:"22K",cur:"TDC Crown",rate:3.0,rank:"#4"},
+  {name:"Kohlrah",gdp:"Ɇ0.8T",prod:"37K",cur:"Dirham",rate:3.1,rank:"#5"},
+  {name:"Retrogistan",gdp:"Ɇ0.45T",prod:"10K",cur:"₽",rate:4.2,rank:"#6"},
+  {name:"Selvaria",gdp:"Ɇ0.15T",prod:"5K",cur:"Selvarium",rate:5.0,rank:"#7"},
+  {name:"Xelonia",gdp:"Ɇ0.25T",prod:"8K",cur:"Xelon Mark",rate:4.6,rank:"#8"},
+  {name:"Ortezaria",gdp:"Ɇ0.18T",prod:"6K",cur:"Ortez Crown",rate:5.2,rank:"#9"}
+];
+
+const cards = document.getElementById("cards");
+countries.forEach(c=>{
+  cards.innerHTML += `<div class="card">
+    <h3>${c.name}</h3>
+    <p>Rank: ${c.rank}</p>
+    <p>GDP: ${c.gdp}</p>
+    <p>Production: ${c.prod}</p>
+    <p>Currency: ${c.cur}</p>
+  </div>`;
+});
+
+const currencies = [{name:"Ɇ",rate:1}, ...countries.map(c=>({name:c.cur,rate:c.rate}))];
+
+const from = document.getElementById("from");
+const to = document.getElementById("to");
+
+currencies.forEach(c=>{
+  from.innerHTML += `<option>${c.name}</option>`;
+  to.innerHTML += `<option>${c.name}</option>`;
+});
+
+function convert(){
+  const amt = Number(document.getElementById("amount").value);
+  const f = currencies.find(c=>c.name===from.value);
+  const t = currencies.find(c=>c.name===to.value);
+  const res = (amt / f.rate * t.rate).toFixed(2);
+  document.getElementById("result").innerText = "Result: " + res + " " + t.name;
+}
+
+document.getElementById("amount").oninput = convert;
+from.onchange = convert;
+to.onchange = convert;
+
+convert();
+</script>
+
+</body>
+</html>
